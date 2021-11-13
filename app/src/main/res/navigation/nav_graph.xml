@@ -3,11 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/introFragment">
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.io.whatsapp.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="com.io.whatsapp.ui.intro.IntroFragment"
+        android:label="fragment_intro"
+        tools:layout="@layout/fragment_intro" >
+        <action
+            android:id="@+id/action_introFragment_to_logInOrSignUpFragment"
+            app:destination="@id/logInOrSignUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/logInOrSignUpFragment"
+        android:name="com.io.whatsapp.ui.authenticate.LogInOrSignUpFragment"
+        android:label="fragment_log_in_or_sign_up"
+        tools:layout="@layout/fragment_log_in_or_sign_up" >
+        <action
+            android:id="@+id/action_logInOrSignUpFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
