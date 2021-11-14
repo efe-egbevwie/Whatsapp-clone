@@ -10,4 +10,9 @@
     <string name="whatsapp_will_need_to_verify_your_phone_number_string">Whatsapp will need to verify your phone number</string>
     <string name="phone_number_string">phone number</string>
     <string name="next_string">NEXT</string>
+    <string name="otp_hint_text">Enter the otp we sent</string>
+    <string name="send_otp_string">Send otp</string>
+    <string name="profile_info_string">Profile Info</string>
+    <string name="profile_info_instructions">Please provide your name and an optional profile photo</string>
+    <string name="name_edit_text_hint_string">Type your name here</string>
 </resources>

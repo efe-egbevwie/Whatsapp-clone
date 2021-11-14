@@ -21,11 +21,19 @@
     </fragment>
     <fragment
         android:id="@+id/logInOrSignUpFragment"
-        android:name="com.io.whatsapp.ui.authenticate.LogInOrSignUpFragment"
+        android:name="com.io.whatsapp.ui.authenticate.LogInFragment"
         android:label="fragment_log_in_or_sign_up"
-        tools:layout="@layout/fragment_log_in_or_sign_up" >
+        tools:layout="@layout/fragment_log_in" >
         <action
             android:id="@+id/action_logInOrSignUpFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_logInOrSignUpFragment_to_setUpProfileFragment"
+            app:destination="@id/setUpProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/setUpProfileFragment"
+        android:name="com.io.whatsapp.ui.authenticate.SetUpProfileFragment"
+        android:label="fragment_set_up_profile"
+        tools:layout="@layout/fragment_set_up_profile" />
 </navigation>

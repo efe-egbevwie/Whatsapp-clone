@@ -60,6 +60,11 @@ dependencies {
     //firebase dependencies
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    //Logging library
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
 
 
 }
