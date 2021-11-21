@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.App
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -30,6 +31,7 @@ class LogInFragment : Fragment() {
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private lateinit var authCallBacks:PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,6 +51,9 @@ class LogInFragment : Fragment() {
 
     private fun sendOtpButtonClicked(){
         binding.sendOtpButton.setOnClickListener {
+
+            if (!validatePhoneNumberLength()) return@setOnClickListener
+
             val phoneNumber =  "+234${enter_phone_number_edit_text.text.toString()}"
             sendOtp(phoneNumber)
         }
@@ -63,7 +68,7 @@ class LogInFragment : Fragment() {
                 Timber.i("verification complete")
                 hideOtpProgressBar()
 
-                signInWithPhoneAuthCredential(credential)
+                signInWithPhoneAuthCredential(credential, phoneNumber)
             }
 
             override fun onVerificationFailed(exception: FirebaseException) {
@@ -91,7 +96,7 @@ class LogInFragment : Fragment() {
         Timber.i("auth started")
     }
 
-    private fun validateFields():Boolean{
+    private fun validateOtpLength():Boolean{
         with(binding){
 
             if (otpEditText.text?.count()!! < 4){
@@ -106,16 +111,40 @@ class LogInFragment : Fragment() {
         return true
     }
 
-    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential){
+    private fun validatePhoneNumberLength():Boolean{
+        binding.let {
+            if (enter_phone_number_edit_text.text?.length!! < 10){
+                enter_phone_number_edit_text.apply {
+                    error = "Please enter your phone number excluding the first zero"
+                    requestFocus()
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+
+    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, phoneNumber: String){
         binding.signInButton.setOnClickListener {
-            if (!validateFields()) return@setOnClickListener
+            if (!validateOtpLength()) return@setOnClickListener
             showSignInProgressBar()
             auth.signInWithCredential(credential).addOnCompleteListener { task ->
                 if (task.isSuccessful){
                     Timber.i("sign in complete")
                     hideSignInProgressBar()
                     val user = task.result?.user
-                    navigateToSetUpProfileFragment()
+
+
+                    user?.let {
+                        App.apply {
+                            saveAuthToken(it.uid)
+                            savePhoneNumber(phoneNumber)
+                        }
+
+                        navigateToSetUpProfileFragment()
+                    }
+
                 }else{
                     hideSignInProgressBar()
                     Timber.i("sign in failed due to ${task.exception}")
