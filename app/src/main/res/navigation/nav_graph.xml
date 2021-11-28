@@ -26,7 +26,8 @@
         tools:layout="@layout/fragment_log_in" >
         <action
             android:id="@+id/action_logInOrSignUpFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph" />
         <action
             android:id="@+id/action_logInOrSignUpFragment_to_setUpProfileFragment"
             app:destination="@id/setUpProfileFragment" />

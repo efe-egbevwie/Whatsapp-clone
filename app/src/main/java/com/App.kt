@@ -27,7 +27,7 @@ class App : Application() {
 
         private lateinit var instance: App
 
-        val sharedPrefs: SharedPreferences by lazy {
+        private val sharedPrefs: SharedPreferences by lazy {
             instance.getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE)
         }
 
