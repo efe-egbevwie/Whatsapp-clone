@@ -36,5 +36,10 @@
         android:id="@+id/setUpProfileFragment"
         android:name="com.io.whatsapp.ui.authenticate.SetUpProfileFragment"
         android:label="fragment_set_up_profile"
-        tools:layout="@layout/fragment_set_up_profile" />
+        tools:layout="@layout/fragment_set_up_profile" >
+        <action
+            android:id="@+id/action_setUpProfileFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph" />
+    </fragment>
 </navigation>

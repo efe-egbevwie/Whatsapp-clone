@@ -1,10 +1,10 @@
 package com.io.whatsapp.ui.authenticate
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.App
 import com.google.firebase.FirebaseException
@@ -26,10 +26,10 @@ class LogInFragment : Fragment() {
     private var _binding: FragmentLogInBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var auth:FirebaseAuth
-    private lateinit var storedVerificationId:String
+    private lateinit var auth: FirebaseAuth
+    private lateinit var storedVerificationId: String
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
-    private lateinit var authCallBacks:PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    private lateinit var authCallBacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
 
     override fun onCreateView(
@@ -49,26 +49,27 @@ class LogInFragment : Fragment() {
     }
 
 
-    private fun sendOtpButtonClicked(){
+    private fun sendOtpButtonClicked() {
         binding.sendOtpButton.setOnClickListener {
 
             if (!validatePhoneNumberLength()) return@setOnClickListener
 
-            val phoneNumber =  "+234${enter_phone_number_edit_text.text.toString()}"
+            val phoneNumber = "+234${enter_phone_number_edit_text.text.toString()}"
             sendOtp(phoneNumber)
         }
 
     }
 
 
-    private fun sendOtp(phoneNumber:String){
+    private fun sendOtp(phoneNumber: String) {
         showOtpProgressBar()
-        authCallBacks = object: PhoneAuthProvider.OnVerificationStateChangedCallbacks(){
+        authCallBacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                 Timber.i("verification complete")
                 hideOtpProgressBar()
 
-                signInWithPhoneAuthCredential(credential, phoneNumber)
+                val phoneNumberId = phoneNumber.removePrefix("+")
+                signInWithPhoneAuthCredential(credential, phoneNumberId)
             }
 
             override fun onVerificationFailed(exception: FirebaseException) {
@@ -76,7 +77,10 @@ class LogInFragment : Fragment() {
                 hideOtpProgressBar()
             }
 
-            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
+            override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
                 super.onCodeSent(verificationId, token)
                 hideOtpProgressBar()
                 storedVerificationId = verificationId
@@ -96,10 +100,10 @@ class LogInFragment : Fragment() {
         Timber.i("auth started")
     }
 
-    private fun validateOtpLength():Boolean{
-        with(binding){
+    private fun validateOtpLength(): Boolean {
+        with(binding) {
 
-            if (otpEditText.text?.count()!! < 4){
+            if (otpEditText.text?.count()!! < 4) {
                 otpEditText.apply {
                     error = "Invalid otp"
                     requestFocus()
@@ -111,9 +115,9 @@ class LogInFragment : Fragment() {
         return true
     }
 
-    private fun validatePhoneNumberLength():Boolean{
+    private fun validatePhoneNumberLength(): Boolean {
         binding.let {
-            if (enter_phone_number_edit_text.text?.length!! < 10){
+            if (enter_phone_number_edit_text.text?.length!! < 10) {
                 enter_phone_number_edit_text.apply {
                     error = "Please enter your phone number excluding the first zero"
                     requestFocus()
@@ -125,12 +129,15 @@ class LogInFragment : Fragment() {
         return true
     }
 
-    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, phoneNumber: String){
+    private fun signInWithPhoneAuthCredential(
+        credential: PhoneAuthCredential,
+        phoneNumber: String
+    ) {
         binding.signInButton.setOnClickListener {
             if (!validateOtpLength()) return@setOnClickListener
             showSignInProgressBar()
             auth.signInWithCredential(credential).addOnCompleteListener { task ->
-                if (task.isSuccessful){
+                if (task.isSuccessful) {
                     Timber.i("sign in complete")
                     hideSignInProgressBar()
                     val user = task.result?.user
@@ -138,14 +145,14 @@ class LogInFragment : Fragment() {
 
                     user?.let {
                         App.apply {
-                            saveAuthToken(it.uid)
+                            saveUid(it.uid)
                             savePhoneNumber(phoneNumber)
                         }
 
                         navigateToSetUpProfileFragment()
                     }
 
-                }else{
+                } else {
                     hideSignInProgressBar()
                     Timber.i("sign in failed due to ${task.exception}")
                 }
@@ -154,37 +161,38 @@ class LogInFragment : Fragment() {
         }
     }
 
-    private fun showSignInProgressBar(){
-        with(binding){
+    private fun showSignInProgressBar() {
+        with(binding) {
             signInProgressBar.visible()
             signInButton.invisible()
         }
     }
 
-    private fun hideSignInProgressBar(){
-        with(binding){
+    private fun hideSignInProgressBar() {
+        with(binding) {
             signInProgressBar.invisible()
             signInButton.visible()
         }
     }
 
 
-    private fun showOtpProgressBar(){
-        with(binding){
+    private fun showOtpProgressBar() {
+        with(binding) {
             otpProgressBar.visible()
             sendOtpButton.invisible()
         }
     }
 
-    private fun hideOtpProgressBar(){
-        with(binding){
+    private fun hideOtpProgressBar() {
+        with(binding) {
             otpProgressBar.invisible()
             sendOtpButton.visible()
         }
     }
 
-    private fun navigateToSetUpProfileFragment(){
+    private fun navigateToSetUpProfileFragment() {
         findNavController().navigate(R.id.action_logInOrSignUpFragment_to_setUpProfileFragment)
     }
+
 
 }

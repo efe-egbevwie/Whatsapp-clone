@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setUpHomeScreenIfLoggedIn(){
-        if (App.getAuthToken().isNullOrEmpty()) return
+        if (App.getUid().isNullOrEmpty()) return
 
         val graph = navHostFragment.navController.navInflater.inflate(R.navigation.nav_graph)
         graph.startDestination = R.id.homeFragment
